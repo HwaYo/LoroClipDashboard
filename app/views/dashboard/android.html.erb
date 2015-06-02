@@ -27,7 +27,7 @@
     <div class="col-sm-6 col-md-4">
       <div class="chart-wrapper">
         <div class="chart-title">
-          App opened count (This 1 day)
+          App opened (Total)
         </div>
         <div class="chart-stage">
           <div id="grid-1-1">
@@ -41,7 +41,7 @@
     <div class="col-sm-6 col-md-4">
       <div class="chart-wrapper">
         <div class="chart-title">
-          Recorded count (This 1 day)
+          Logged in User count (Total)
         </div>
         <div class="chart-stage">
           <div id="grid-1-2">
@@ -55,7 +55,7 @@
     <div class="col-sm-6 col-md-4">
       <div class="chart-wrapper">
         <div class="chart-title">
-          Played count (This 1 day)
+          Recorded count (Total)
         </div>
         <div class="chart-stage">
           <div id="grid-1-3">
@@ -66,11 +66,11 @@
         </div>
       </div>
     </div>
-
+<!-- end of three -->
     <div class="col-sm-6 col-md-4">
       <div class="chart-wrapper">
         <div class="chart-title">
-          Landing Page PV (This 1 day)
+          Played count (Total)
         </div>
         <div class="chart-stage">
           <div id="grid-2-1">
@@ -90,7 +90,6 @@
 
 <script>
   Holder.add_theme("white", { background:"#fff", foreground:"#a7a7a7", size:10 });
-
   $(document).on('ready page:load', function () {
     var client = new Keen({
        projectId: "<%= ENV['KEEN_PROJECT_ID'] %>",
@@ -105,39 +104,41 @@
       var query = new Keen.Query('count_unique', {
         eventCollection: 'app_opened',
         target_property: 'udid',
-        timeframe: 'this_1_days'
+        filters: [{"property_name":"from","operator":"eq","property_value":"android"}]
       });
       client.draw(query, $('#grid-1-1')[0], {
         chartType: 'metric',
-        title: 'App opened count (This 1 day)'
+        title: 'App opened count (Total)'
+      });
+
+      var query = new Keen.Query('count_unique', {
+        eventCollection: 'logged_in',
+        target_property: 'uid',
+        filters: [{"property_name":"from","operator":"eq","property_value":"android"}]
+      });
+      client.draw(query, $('#grid-1-2')[0], {
+        chartType: 'metric',
+        title: 'Logged in User count (Total)'
       });
 
       var query = new Keen.Query('count_unique', {
         eventCollection: 'recorded',
         target_property: 'record.uuid',
-        timeframe: 'this_1_days'
+        filters: [{"property_name":"from","operator":"eq","property_value":"android"}]
       });
-      client.draw(query, $('#grid-1-2')[0], {
+      client.draw(query, $('#grid-1-3')[0], {
         chartType: 'metric',
-        title: 'Recorded count (This 1 day)'
+        title: 'Recorded count (Total)'
       });
 
       var query = new Keen.Query('count_unique', {
         eventCollection: 'played',
         target_property: 'record.uuid',
-        timeframe: 'this_1_days'
-      });
-      client.draw(query, $('#grid-1-3')[0], {
-        chartType: 'metric',
-        title: 'Played count (This 1 day)'
-      });
-
-      var query = new Keen.Query('count', {
-        eventCollection: 'landing',
+        filters: [{"property_name":"from","operator":"eq","property_value":"android"}]
       });
       client.draw(query, $('#grid-2-1')[0], {
         chartType: 'metric',
-        title: 'Landing Page PV (This 1 day)'
+        title: 'Played count (Total)'
       });
     });
   });
