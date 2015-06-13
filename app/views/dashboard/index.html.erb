@@ -134,6 +134,7 @@
 
       var query = new Keen.Query('count', {
         eventCollection: 'landing',
+        filters: [{"property_name":"agent","operator":"not_contains","property_value":"NewRelicPinger"}]
       });
       client.draw(query, $('#grid-2-1')[0], {
         chartType: 'metric',
